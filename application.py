@@ -8,20 +8,24 @@ from io import BytesIO
 from tkmacosx import Button
 from tkinter import Canvas, Scrollbar, VERTICAL
 
+# Set paths for assets
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH_1 = OUTPUT_PATH / Path("/Users/ayesha/Desktop/build/assets/frame0")
 ASSETS_PATH_2 = OUTPUT_PATH / Path("/Users/ayesha/Desktop/build/assets/frame1")
 
-
+# Function to create path relative to ASSETS_PATH_1
 def relative_to_assets_1(path: str) -> Path:
     return ASSETS_PATH_1 / Path(path)
 
 
+# Function to make a request to TMDB API
 def tmdb_request(endpoint, params={}):
+    # TMDB API base URL and API key
     base_url = "https://api.themoviedb.org/3"
     api_key = '8200c244af3336fa25e80dc5c1a77ebf'
     params['api_key'] = api_key
 
+    # Make the request
     response = requests.get(f"{base_url}/{endpoint}", params=params)
     data = response.json()
 
@@ -31,6 +35,7 @@ def tmdb_request(endpoint, params={}):
         print(f"Error {response.status_code}: {data.get('status_message', 'Unknown Error')}")
         return None
 
+# Function to get movie images from TMDB
 def get_movie_images(movie_id): 
         # Make a request to the TMDB API to get images for a specific movie
         endpoint = f"movie/{movie_id}/images"
@@ -41,6 +46,8 @@ def get_movie_images(movie_id):
             return [f"https://image.tmdb.org/t/p/w500/{path['file_path']}" for path in image_paths]
         return []
 
+
+# Function to get trending movies and display them
 def get_trending_movies(window):
     base_url = "https://api.themoviedb.org/3"
     api_key = '8200c244af3336fa25e80dc5c1a77ebf'
@@ -73,7 +80,7 @@ def get_trending_movies(window):
     window.update_idletasks()
     window.config(scrollregion=window.bbox("all"))
 
-
+# Function to display movie poster in a frame
 def display_movie_poster(frame, poster_path):
     if poster_path:
         poster_url = f'https://image.tmdb.org/t/p/w500{poster_path}'
@@ -95,6 +102,8 @@ def display_movie_poster(frame, poster_path):
         poster_label.image = image
         poster_label.grid(row=0, column=0, rowspan=3, padx=10)
     else:
+
+        # Use a placeholder image if no poster is available
         placeholder_path = 'path/to/placeholder/image.jpg'
         placeholder_image = Image.open(placeholder_path)
         placeholder_image = ImageTk.PhotoImage(placeholder_image)
@@ -108,6 +117,7 @@ window = Tk()
 window.geometry("808x650")
 window.configure(bg="#FFFFFF")
 
+# Create a canvas for the main window
 canvas = Canvas(
     window,
     bg="#FFFFFF",
