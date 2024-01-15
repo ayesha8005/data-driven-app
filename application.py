@@ -164,12 +164,13 @@ canvas.create_text(
     font=("Times New Roman", 18)
 )
 
-
+# Function to open the second window
 def open_window2():
     window2 = Toplevel()
     window2.geometry("808x650")
     window2.configure(bg="#8ecae6")
 
+    # Function to open a details window for a selected movie
     def open_details_window(movie_id):
         movie_details = get_movie_details(movie_id)
         if movie_details:
@@ -178,6 +179,7 @@ def open_window2():
 
         poster_path = movie_details['poster_path']
         if poster_path:
+            # Display the movie poster in the details window
             poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}"
             poster_image = Image.open(requests.get(poster_url, stream=True).raw)
             poster_image_tk = ImageTk.PhotoImage(poster_image)
@@ -191,15 +193,18 @@ def open_window2():
         details_text.insert(END, f"Overview: {movie_details['overview']}\n")
         details_text.insert(END, f"Release Date: {movie_details['release_date']}\n")
 
+    # Function to get movie details from TMDB API
     def get_movie_details(movie_id):
         endpoint = f"movie/{movie_id}"
         return tmdb_request(endpoint)
 
+    # Function to search for movies based on a query
     def search_movies(query):
         endpoint = "search/movie"
         params = {'query': query}
         return tmdb_request(endpoint, params)
 
+    # Function to handle the search button click event
     def search_button_clicked():
         query = entry.get()
         results = search_movies(query)
@@ -208,6 +213,7 @@ def open_window2():
         for result in results['results']:
             result_listbox.insert(END, result['title'])
 
+    # Function to show details for the selected movie
     def show_details():
         selected_index = result_listbox.curselection()
         if selected_index:
@@ -220,7 +226,7 @@ def open_window2():
     def yview(self, *args):
         NoteBook.yview(*args)
 
-
+    # GUI components for window2
     header = Label(window2, text="MoviesBase", bg='#0096c7', fg='white', font=('Georgia', 20), width=30, height=3)
     header.place(x=200, y=30)
 
@@ -258,17 +264,22 @@ def open_window2():
 
     window2.mainloop()
 
+
+# Function to open the third window
+
 def open_window3(): 
     window3 = Toplevel()
     window3.geometry("808x650")
     window3.configure(bg="#8ecae6")
+
+    # Call the function to get trending movies and display them
 
     get_trending_movies(window3)
 
     window3.mainloop()
 
     
-
+# Create a button with an image and set its properties
 button_image_1 = PhotoImage(
     file=relative_to_assets_1("button_1.png"))
 button_1 = Button(
